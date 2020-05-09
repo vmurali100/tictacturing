@@ -1,12 +1,118 @@
+html,
+body {
+  height: 100%;
+  background: #0b233f;
+  color: white;
+}
 .App {
   text-align: center;
+  margin-top: 100px;
+}
+.main {
+  width: 480px;
+  height: 480px;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='44' ry='44' stroke='%23717273' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border-radius: 44px;
+  border-color: #ffffff;
+  border-top: 1px solid #0b233f;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  margin: 0;
+}
+.box {
+  width: 145px;
+  height: 145px;
+  float: left;
+  background: #253952;
+  color: white;
+  border-right: 1px solid white;
+  border-bottom: 1px solid white;
+}
+.box2,
+.box5,
+.box8 {
+  border-right: none;
+}
+.box6,
+.box7,
+.box8 {
+  border-bottom: none;
+}
+.box.box-bottom {
+  border-bottom: none;
+}
+.closeImage {
+  margin-top: 30px;
+}
+/* .board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 440px;
+  margin: 0 auto;
+  border-radius: 46px;
+  overflow: auto;
+} */
+.board {
+  width: 440px;
+  height: 440px;
+  margin: 0 auto;
+  background: #253952;
+  border-radius: 22px;
+  margin-top: 20px;
+  box-shadow: 2px 0px 3px #253952;
+  overflow: hidden;
+}
+.round {
+  width: 70%;
+  height: 70%;
+  margin: 0 auto;
+  border: 20px solid white;
+  border-radius: 50%;
+  margin-top: 20px;
 }
 
+.player {
+  width: 150px;
+  height: 150px;
+  background: #253952;
+  margin: 10px auto;
+  border-radius: 30px;
+  padding-top: 10px;
+}
+h2.turn {
+  height: 50px;
+  margin-top: 100px;
+  color: #fb9e01;
+}
+.player p {
+  color: #fb9e01;
+  margin-bottom: 10px;
+}
+.count {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #253952;
+  margin: 2px 5px;
+}
+.playerCount {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  border: 10px solid white;
+  border-radius: 50%;
+  /* margin-top: 20px; */
+}
+li {
+  display: inline-block;
+}
+.win {
+  background: white;
+}
+img.playerImage {
+  width: 44px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
