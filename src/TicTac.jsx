@@ -3,38 +3,27 @@ import Player from "./Player";
 import { connect } from "react-redux";
 import { updateBoard, updateWinner, updateWinnerCount } from "./Store/actions";
 class TicTac extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      board: Array(9).fill(null),
-      player: "X",
-      winner: null,
-      player1WinningCount: Array(6).fill(null),
-      player2WinningCount: Array(6).fill(null),
-    };
-  }
-
   handleClick = (e, i) => {
     const { board, player } = this.props.tictoc;
     let newBoard = board;
     let newPlayer = player === "X" ? "O" : "X";
 
     const { winner } = this.props.tictoc;
-
+    const { dispatch } = this.props;
     if (winner) {
-      this.setState({ winner: null }, () => {
-        if (this.props.tictoc.board[i] === null && !this.props.tictoc.winner) {
-          newBoard[i] = this.props.tictoc.player;
-          let obj = {
-            board: newBoard,
-            player: newPlayer,
-          };
-          updateBoard(obj);
+      let obj = {
+        winner: null,
+        board: Array(9).fill(null),
+      };
+      dispatch(updateWinner(obj));
+      newBoard[i] = player;
 
-          // this.checkWinner();
-        }
-      });
+      obj = {
+        board: newBoard,
+        player: newPlayer,
+      };
+      dispatch(updateBoard(obj));
+      this.checkWinner();
     }
     if (board[i] === null && !winner) {
       newBoard[i] = player;
@@ -49,8 +38,15 @@ class TicTac extends Component {
   };
 
   checkWinner() {
-    const { board, player } = this.props.tictoc;
-
+    const {
+      board,
+      player,
+      winner,
+      player1WinningCount,
+      player2WinningCount,
+    } = this.props.tictoc;
+    const { dispatch } = this.props;
+    let matchStatus = null;
     let winLines = [
       ["0", "1", "2"],
       ["3", "4", "5"],
@@ -68,21 +64,18 @@ class TicTac extends Component {
           winner: this.props.tictoc.player,
           board: Array(9).fill(null),
         };
+        alert(`Congrats . ${player} won the Board`);
         this.props.dispatch(updateWinner(obj));
-        if (this.props.tictoc.player === "X") {
-          let player1WinningCount = this.props.tictoc.player1WinningCount;
-          let index =
-            this.props.tictoc.player1WinningCount.lastIndexOf(true) + 1;
+        if (player === "X") {
+          let index = player1WinningCount.lastIndexOf(true) + 1;
           player1WinningCount[index] = true;
           let winner = {
             winnerName: "X",
             WinningCount: player1WinningCount,
           };
-          this.props.dispatch(updateWinnerCount(winner));
+          dispatch(updateWinnerCount(winner));
         } else {
-          let player2WinningCount = this.props.tictoc.player2WinningCount;
-          let index =
-            this.props.tictoc.player2WinningCount.lastIndexOf(true) + 1;
+          let index = player2WinningCount.lastIndexOf(true) + 1;
           player2WinningCount[index] = true;
 
           let winner = {
@@ -109,22 +102,43 @@ class TicTac extends Component {
             `Congratulations ... ${this.props.tictoc.player} Won the Game `
           );
         } else {
-          const { board, player } = this.props.tictoc;
-
-          // this.setState({ board: Array(9).fill(null) });
           let obj = {
             board: Array(9).fill(null),
             player: player,
           };
           this.props.dispatch(updateBoard(obj));
         }
+      } else {
+        let checkBoard = board.filter((val) => {
+          return val == "X" || val == "O";
+        });
+        if (checkBoard.length === 9 && !winner) {
+          matchStatus = "draw";
+        }
       }
     });
+    if (matchStatus) {
+      alert("Board Draw .. Play Again");
+      this.restartGame();
+    }
   }
 
+  restartGame = () => {
+    const { dispatch } = this.props;
+    let obj = {
+      winner: null,
+      board: Array(9).fill(null),
+    };
+    dispatch(updateWinner(obj));
+  };
   render() {
     console.log(this.props.tictoc);
-    const { board } = this.props.tictoc;
+    const {
+      board,
+      winner,
+      player1WinningCount,
+      player2WinningCount,
+    } = this.props.tictoc;
     const Box = board.map((box, i) => (
       <div
         className={`box box${i}`}
@@ -144,32 +158,31 @@ class TicTac extends Component {
         <div className="container">
           <div className="row">
             <div className="col-sm">
-              <h2 className="turn">
-                {this.props.tictoc.winner === "X" && <span>Winner</span>}
-              </h2>
+              <h2 className="turn">{winner === "X" && <span>Winner</span>}</h2>
 
               <Player
                 playerNO="1"
                 playerName="Murali"
-                winningCount={this.props.tictoc.player1WinningCount}
+                winningCount={player1WinningCount}
               />
             </div>
             <div className="col-sm">
               <div className="main">
                 <div className="board">{Box}</div>
               </div>
-              <button className="btn btn-primary mt-3" onClick={this.startGame}>
-                Start Game
+              <button
+                className="btn btn-primary mt-3"
+                onClick={this.restartGame}
+              >
+                Re Start Game
               </button>
             </div>
             <div className="col-sm">
-              <h2 className="turn">
-                {this.props.tictoc.winner === "O" && <span>Winner</span>}
-              </h2>
+              <h2 className="turn">{winner === "O" && <span>Winner</span>}</h2>
               <Player
                 playerNO="2"
                 playerName="Krishna"
-                winningCount={this.props.tictoc.player2WinningCount}
+                winningCount={player2WinningCount}
               />
             </div>
           </div>
